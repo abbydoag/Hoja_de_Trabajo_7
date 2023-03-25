@@ -17,6 +17,6 @@ public class TreeTest {
         Tree tree = new Tree();
         tree.insert("dog", "perro");
         assertEquals("perro", tree.search("dog"));
-        assertEquals(null, tree.search("cat"));
+        assertEquals(null, tree.search("fish"));
     }
 }

@@ -9,37 +9,36 @@ import java.util.Scanner;
 
 public class Main {
     private static String readDictionary(String dictionaryFile) throws FileNotFoundException {
-        BufferedReader dictionaryScan = new BufferedReader(new FileReader("src/dictionary/diccionario.txt"));
-        String dictionary = "";
+        BufferedReader dictionaryScan = new BufferedReader(new FileReader(dictionaryFile));
+        StringBuilder dictionary = new StringBuilder();
 
         try {
-            dictionary = dictionaryScan.readLine();
-            while (dictionary != null) {
+            String languages = dictionaryScan.readLine();
+            while (languages != null) {
                 System.out.println(dictionary);
-                dictionary = dictionaryScan.readLine();
+                dictionary.append(languages).append("\n");
+                languages= dictionaryScan.readLine();
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // para quitar el null
-        if (dictionary == null) {
-            return "";
-        }
-        System.out.println(dictionary);
-        return dictionary;
+        
+        return dictionary.toString();
     }
 
     public static void main(String[] args) throws FileNotFoundException {
     	Tree tree = new Tree();
     	
-        try (BufferedReader br = new BufferedReader(new FileReader("src/dictionary/texto.txt"))) {
+    	try (BufferedReader br = new BufferedReader(new FileReader("src/dictionary/diccionario.txt"))) {
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] words = line.split(" ");
-                String word = words[0];
-                String translation = words[1];
-                tree.insert(word, translation);
+            while ((line = br.readLine())!=null){
+                String[] words = line.split(",");
+                if (words.length >= 2) {
+                	String word = words[0];
+                    String translation = words[1];
+                    tree.insert(word, translation);
+                }
             }
         } catch (IOException e) {
             System.err.format("IOException: %s%n", e);
@@ -53,7 +52,11 @@ public class Main {
 
         List<String> wordsT = Arrays.asList(tree.getWordsInOrder());
         for (String wordT : wordsT) {
-            System.out.println(wordT + " - " + ((Node)tree.search(wordT)).getTranslation());
+        	Object result = tree.search(wordT);
+        	 if (result != null && result instanceof Node) {
+        		 	Node node = (Node) result;
+        		 	System.out.println(wordT + " - " + node.getTranslation());
+        	    }
         }
      }
 }
