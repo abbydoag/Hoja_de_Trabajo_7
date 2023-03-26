@@ -45,18 +45,42 @@ public class Main {
         }
 
         List<String> words = Arrays.asList(tree.getWordsInOrder());
+        
+        //In-order
+        System.out.println("Palabras ordenadas por inglés:");
         for (String word : words) {
         	System.out.println(word + " - " + tree.search(word));
         }      
         tree.delete("house");
 
-        List<String> wordsT = Arrays.asList(tree.getWordsInOrder());
-        for (String wordT : wordsT) {
+        List<String> wordsT=Arrays.asList(tree.getWordsInOrder());
+        for (String wordT : wordsT){
         	Object result = tree.search(wordT);
-        	 if (result != null && result instanceof Node) {
+        	 if (result!= null &&result instanceof Node) {
         		 	Node node = (Node) result;
         		 	System.out.println(wordT + " - " + node.getTranslation());
         	    }
         }
-     }
+        
+        //Traduccion oración texto
+        try (BufferedReader br = new BufferedReader(new FileReader("src/dictionary/text.txt"))) {
+            String line;
+            while ((line = br.readLine())!=null){
+                String[] wordsS = line.split(" ");
+                System.out.println();
+                System.out.println("Traducción archivo text:");
+                //proceso traducción
+                for (String wordS : wordsS) {
+                    String translatedWord = (String) tree.search(wordS.toLowerCase());         
+                    if (translatedWord != null && !translatedWord.isEmpty()) {
+                        System.out.print(translatedWord + " ");
+                    } else {
+                        System.out.print("*" + wordS + "* ");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.format("IOException: %s%n", e);
+        }
+    }
 }
